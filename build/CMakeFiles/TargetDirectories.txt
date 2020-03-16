@@ -1,3 +1,0 @@
-/home/jason/GIT/CppRobotics/build/CMakeFiles/edit_cache.dir
-/home/jason/GIT/CppRobotics/build/CMakeFiles/astar.dir
-/home/jason/GIT/CppRobotics/build/CMakeFiles/rebuild_cache.dir
