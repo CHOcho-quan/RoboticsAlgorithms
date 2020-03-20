@@ -4,10 +4,13 @@ find_package(Eigen3 REQUIRED)
 find_package(OpenCV REQUIRED)
 
 include_directories(${EIGEN3_INCLUDE_DIR})
-include_directories(./include)
+include_directories(./include/planning)
 
-add_executable(astar src/a_star.cpp)
+add_executable(astar src/planning/a_star.cpp)
 target_link_libraries(astar ${OpenCV_LIBS} )
 
-add_executable(rrt src/rrt.cpp)
+add_executable(rrt src/planning/rrt.cpp)
 target_link_libraries(rrt ${OpenCV_LIBS} )
+
+add_executable(prm src/planning/prm.cpp)
+target_link_libraries(prm ${OpenCV_LIBS} )
