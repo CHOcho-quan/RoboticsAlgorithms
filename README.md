@@ -8,9 +8,16 @@
   Simple A* planning with global obstacle map.
   ![](./results/astar.png)
 
+- PRM\
+  Simple PRM planning with global obstacle map.
+  ![](./results/prm.png)
+
 - RRT\
   Simple RRT planning with global obstacle map.\
   TO BE UPDATED - RRT* Algorithm
   ![](./results/rrt.png)
+
+  However, slow due to its limit in complex maps that has narrow paths.
+  ![](./results/rrt2.png)
 
 
