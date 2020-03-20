@@ -5,8 +5,7 @@
 ### Will be updating all the time !
 
 - A* Planning\
-  Simple A* planning with global obstacle map.\
-  TO BE UPDATED - local obstacle map A* with different heuristic func
+  Simple A* planning with global obstacle map.
   ![](./results/astar.png)
 
 - RRT\
