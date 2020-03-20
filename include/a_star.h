@@ -1,3 +1,7 @@
+//
+// Created by quan
+// 2020.3.15
+//
 #include <iostream>
 #include <vector>
 #include <string>
@@ -6,6 +10,8 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
+
+using namespace std;
 
 enum CELLTYPE{
     FREE=1,

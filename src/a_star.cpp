@@ -1,6 +1,8 @@
+//
+// Created by quan
+// 2020.3.15
+//
 #include "a_star.h"
-
-using namespace std;
 
 #define DEBUG 0
 
@@ -19,7 +21,7 @@ struct Node {
 
 class AstarPlanner {
     /**
-     * A* Planner
+     * Robotics A* Planner
      * @calcPath - calculating the final path and draw it on Obstacle map
      * @AstarPlanning - plan the path on the given obstacle map
     */
