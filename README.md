@@ -13,8 +13,7 @@
   ![](./results/prm.png)
 
 - RRT\
-  Simple RRT planning with global obstacle map.\
-  TO BE UPDATED - RRT* Algorithm
+  Simple RRT planning with global obstacle map.
   ![](./results/rrt.png)
 
   However, slow due to its limit in complex maps that has narrow paths.
