@@ -60,6 +60,23 @@ class GlobalObstacleMap {
         return (b != 255) || (g != 255) || (r != 255);
     }
 
+    bool checkPath(cv::Point p1, cv::Point p2) {
+        float step_x = p1.x - p2.x, step_y = p1.y - p2.y;
+        float step_length = sqrt(pow(step_x, 2) + pow(step_y, 2));
+        step_x /= step_length;
+        step_y /= step_length;
+
+        float init_x = p1.x, init_y = p1.y;
+        while ((init_x - p2.x) * step_x >= 0 && (init_y - p2.y) * step_y >= 0) {
+            init_x -= step_x;
+            init_y -= step_y;
+            // cout << cvRound(init_x) << ' ' << cvRound(init_y) << endl;
+            if (checkCell(cvRound(init_x), cvRound(init_y))) return false;
+        }
+
+        return true;
+    }
+
     float heuristic(int x, int y) {
         return sqrt(pow(x - goal_x, 2) + pow(y - goal_y, 2));
     }
