@@ -12,5 +12,8 @@ target_link_libraries(astar ${OpenCV_LIBS} )
 add_executable(rrt src/planning/rrt.cpp)
 target_link_libraries(rrt ${OpenCV_LIBS} )
 
+add_executable(rrt_star src/planning/rrt_star.cpp)
+target_link_libraries(rrt_star ${OpenCV_LIBS} )
+
 add_executable(prm src/planning/prm.cpp)
 target_link_libraries(prm ${OpenCV_LIBS} )

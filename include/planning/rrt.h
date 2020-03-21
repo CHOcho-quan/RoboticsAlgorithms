@@ -33,7 +33,7 @@ class GlobalObstacleMap {
     int map_size_y;
     string w_name;
 
-    GlobalObstacleMap(int s_x, int s_y, int g_x, int g_y, string map_path="../maps/map_2.png", string window_name="Robotics") {
+    GlobalObstacleMap(int s_x, int s_y, int g_x, int g_y, string map_path="../maps/map_1.png", string window_name="Robotics") {
         start_x = s_x;
         start_y = s_y;
         goal_x = g_x;
@@ -57,9 +57,10 @@ class GlobalObstacleMap {
         int g = (int)*(background.data + background.step[0] * y + x * background.step[1] + background.elemSize1());
         int r = (int)*(background.data + background.step[0] * y + x * background.step[1] + background.elemSize1() * 2);
         if (DEBUG) cout << b << ' ' << g << ' ' << r << endl;
-        return (b != 255) || (g != 255) || (r != 255);
+        return (b == 0) && (g == 0) && (r == 0);
     }
 
+    // If not convex shapes or big expand steps, use this as collision check
     bool checkPath(cv::Point p1, cv::Point p2) {
         float step_x = p1.x - p2.x, step_y = p1.y - p2.y;
         float step_length = sqrt(pow(step_x, 2) + pow(step_y, 2));

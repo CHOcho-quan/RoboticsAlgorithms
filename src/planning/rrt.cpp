@@ -12,9 +12,8 @@ struct Node {
     */
     int x;
     int y;
-    float distance;
     Node *parent;
-    Node(int x_c, int y_c, float c, Node *p=NULL) : x(x_c), y(y_c), distance(c), parent(p) {}
+    Node(int x_c, int y_c, Node *p=NULL) : x(x_c), y(y_c), parent(p) {}
 };
 
 class RRTPlanner {
@@ -59,7 +58,7 @@ class RRTPlanner {
         vector<Node *> waiting_list;
 
         Node *start, *final;
-        start = new Node(m.start_x, m.start_y, 2147483647);
+        start = new Node(m.start_x, m.start_y);
         waiting_list.push_back(start);
         while (!waiting_list.empty())
         {
@@ -86,16 +85,16 @@ class RRTPlanner {
             int next_x = current->x + x_length * expand_length, next_y = current->y + y_length * expand_length;
 
             // Collision Check
-            if (m.checkCell(next_x, next_y)) continue;
+            if (!m.checkPath(cv::Point(next_x, next_y), cv::Point(current->x, current->y))) continue;
             if (m.heuristic(next_x, next_y) < expand_length) {
                 cout << "Path Finded!" << endl;
                 cv::line(m.background, cv::Point(current->x, current->y),
                                        cv::Point(m.goal_x, m.goal_y), cv::Scalar(0, 120, 0), 3);
-                final = new Node(m.goal_x, m.goal_y, 0.0, current);
+                final = new Node(m.goal_x, m.goal_y, current);
                 break;
             }
 
-            next = new Node(next_x, next_y, m.heuristic(next_x, next_y), current);
+            next = new Node(next_x, next_y, current);
 
             waiting_list.push_back(next);
 
@@ -118,5 +117,4 @@ int main()
     RRTPlanner rrt = RRTPlanner();
     srand(int(time(NULL)));
     rrt.RRTPlanning(om);
-    cout << rrt.randDirection() << endl;
 }

@@ -89,6 +89,7 @@ class AstarPlanner {
                     next = new Node(next_x, next_y, 0.0, current);
                     final = next;
                     ending_flag = true;
+                    cout << "Path Find!" << endl;
                     break;
                 }
                 if (close_list[next_x][next_y] || om.checkCell(next_x, next_y) == OBSTACLE) continue;
