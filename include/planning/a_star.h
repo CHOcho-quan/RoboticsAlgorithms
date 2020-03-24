@@ -41,7 +41,12 @@ class GlobalObstacleMap {
     string w_name;
 
     GlobalObstacleMap(int m_x, int m_y, int s_x, int s_y, int g_x, int g_y,
-        vector<int> o_x, vector<int> o_y, string name="Robotics") {
+        vector<int> o_x, vector<int> o_y, string name="A*") {
+        /**
+         * @brief - Initialization of the Global Obstacle Map class
+         * @param m_x, m_y - map size; s_x, s_y - start place; g_x, g_y - goal place
+         * @param o_x, o_y - obstacle representation; name - window name of visualization
+        */
         start_x = s_x;
         start_y = s_y;
         goal_x = g_x;
@@ -61,12 +66,21 @@ class GlobalObstacleMap {
     }
 
     void render(int s) {
+        /**
+         * @brief - Rendering the visualization of the planner and map
+         * @param s - waitKey parameter, second
+        */
         cv::imshow(w_name, background);
         cv::waitKey(s);
     }
 
     CELLTYPE checkCell(int x, int y)
     {
+        /**
+         * @breif - Collision check base function
+         * @param x, y - the checking place in the obstacle map
+         * @return - return the cell type of the place inside the map
+        */
         if (x == start_x && y == start_y) return START;
         if (x == goal_x && y == goal_y) return GOAL;
         for (int i = 0;i < obstacle_x.size();i++) if (obstacle_x[i] == x && obstacle_y[i] == y) return OBSTACLE;
@@ -74,6 +88,11 @@ class GlobalObstacleMap {
     }
 
     void annoteCell(int c_x, int c_y, CELLTYPE celltype) {
+        /**
+         * @breif - Visualization of the given cell type place in map
+         * @param c_x, c_y - exact place in the map
+         * @param celltype - given celltype of the place
+        */
         switch (celltype) {
             case FREE: break;
             case ROBOT: {
@@ -100,6 +119,11 @@ class GlobalObstacleMap {
 
     float heuristic(int x, int y)
     {
+        /**
+         * @brief - Heuristic function using in A*
+         * @param x, y - exact place in the map
+         * @return - heuristic value of the place, i.e. distance to goal
+        */
         return sqrt(pow(goal_x - x, 2) + pow(goal_y - y, 2));
     }
 };

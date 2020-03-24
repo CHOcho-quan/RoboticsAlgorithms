@@ -29,10 +29,18 @@ class RRTPlanner {
     RRTPlanner(float t_g = 0.5, int e_l = 20) : expand_length(e_l), towards_goal(t_g) {}
 
     float randDirection() {
+        /**
+         * @brief - randomize a direction of rrt to expand
+         * @return - return the theta angle of the direction
+        */
         return rand() / double(RAND_MAX);
     }
 
     void calcPath(Node *goal, GlobalObstacleMap m) {
+        /**
+         * @brief - calculate the final path finded by RRT
+         * @param goal - goal place; m - obstacle map
+        */
         while (goal != NULL) {
             Node *tmp = goal->parent;
             if (tmp != NULL) cv::line(m.background, cv::Point(goal->x, goal->y), cv::Point(tmp->x, tmp->y), cv::Scalar(128, 0, 128), 3);
@@ -41,6 +49,11 @@ class RRTPlanner {
     }
 
     Node* getNearestNode(vector<Node*> vec, cv::Point cp) {
+        /**
+         * @brief - get the nearest node inside the open list
+         * @param vec - open list; cp - current point
+         * @return - returning the nearest node
+        */
         float min_distance = 2147483647;
         Node *re;
         for (int i = 0;i < vec.size();i++) {
@@ -55,6 +68,10 @@ class RRTPlanner {
     }
     
     void RRTPlanning(GlobalObstacleMap m) {
+        /**
+         * @brief - RRT planning algorithm
+         * @param m - obstacle map
+        */
         vector<Node *> waiting_list;
 
         Node *start, *final;

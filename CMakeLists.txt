@@ -3,6 +3,8 @@ project(CppRobotics_quan)
 find_package(Eigen3 REQUIRED)
 find_package(OpenCV REQUIRED)
 
+message(STATUS "${OpenCV_DIR}")
+
 include_directories(${EIGEN3_INCLUDE_DIR})
 include_directories(./include/planning)
 

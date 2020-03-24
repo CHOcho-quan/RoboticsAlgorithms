@@ -22,7 +22,7 @@ class RRTStarPlanner {
     /**
      * Robotics RRT* Planner
      * @calcPath - calculating the final path and draw it on Obstacle map
-     * @RRTPlanning - planning the path from start to end by RRT method
+     * @RRTStarPlanning - planning the path from start to end by RRT method
     */
  private:
     int expand_length;
@@ -32,10 +32,18 @@ class RRTStarPlanner {
     RRTStarPlanner(float t_g = 0.5, int e_l = 20, float gamma = 100) : expand_length(e_l), towards_goal(t_g), gamma_d(gamma) {}
 
     float randDirection() {
+        /**
+         * @brief - randomize a direction of rrt to expand
+         * @return - return the theta angle of the direction
+        */
         return rand() / double(RAND_MAX);
     }
 
     void calcPath(Node *goal, GlobalObstacleMap m) {
+        /**
+         * @brief - calculate the final path finded by RRT*
+         * @param goal - goal place; m - obstacle map
+        */
         while (goal != NULL) {
             Node *tmp = goal->parent;
             if (tmp != NULL) cv::line(m.background, cv::Point(goal->x, goal->y), cv::Point(tmp->x, tmp->y), cv::Scalar(128, 0, 128), 3);
@@ -44,6 +52,11 @@ class RRTStarPlanner {
     }
 
     Node* getNearestNode(vector<Node*> vec, cv::Point cp) {
+        /**
+         * @brief - get the nearest node inside the open list
+         * @param vec - open list; cp - current point
+         * @return - returning the nearest node
+        */
         float min_distance = 2147483647;
         Node *re;
         for (int i = 0;i < vec.size();i++) {
@@ -58,10 +71,20 @@ class RRTStarPlanner {
     }
 
     float distance(cv::Point p1, cv::Point p2) {
+        /**
+         * @brief - calculating the distance between point1 and point2
+         * @param p1, p2 - the two points to be calculated distance
+         * @return - returning the distance of the two points
+        */
         return sqrt(pow(p1.x - p2.x, 2) + pow(p1.y - p2.y, 2));
     }
 
     vector<Node*> nearSearch(Node* n, vector<Node*> l) {
+        /**
+         * @brief - RRT* searching near nodes to do rewiring
+         * @param n - node to be searched as center; l - node list
+         * @return - returning a vector containing all near nodes
+        */
         vector<Node*> result;
         int nodes_num = l.size() + 1;
         float criterion = gamma_d * sqrt(log(nodes_num) / nodes_num);
@@ -76,6 +99,10 @@ class RRTStarPlanner {
     }
     
     void RRTStarPlanning(GlobalObstacleMap m) {
+        /**
+         * @brief - RRT* planning algorithm
+         * @param m - obstacle map
+        */
         vector<Node *> waiting_list;
 
         Node *start, *final;
@@ -83,6 +110,7 @@ class RRTStarPlanner {
         waiting_list.push_back(start);
         while (!waiting_list.empty())
         {
+            // Do as normal RRT do
             float p = randDirection();
             cv::Point target;
             
@@ -152,6 +180,7 @@ class RRTStarPlanner {
                     pp->parent = next;
                     cv::line(m.background, cv::Point(pp->x, pp->y), 
                                    cv::Point(next_x, next_y), cv::Scalar(0, 120, 0), 3);
+                    if (DEBUG) cout << "Rewire!" << endl;
                 }
             }
 

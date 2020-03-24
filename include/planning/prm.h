@@ -33,7 +33,12 @@ class GlobalObstacleMap {
     int map_size_y;
     string w_name;
 
-    GlobalObstacleMap(int s_x, int s_y, int g_x, int g_y, string map_path="../maps/map_1.png", string window_name="Robotics") {
+    GlobalObstacleMap(int s_x, int s_y, int g_x, int g_y, string map_path="../maps/map_1.png", string window_name="PRM") {
+        /**
+         * @brief - Initialization of the Global Obstacle Map class
+         * @param m_x, m_y - map size; s_x, s_y - start place; g_x, g_y - goal place
+         * @param o_x, o_y - obstacle representation; name - window name of visualization
+        */
         start_x = s_x;
         start_y = s_y;
         goal_x = g_x;
@@ -52,6 +57,11 @@ class GlobalObstacleMap {
     }
 
     bool checkCell(int x, int y) {
+        /**
+         * @breif - Collision check base function
+         * @param x, y - the checking place in the obstacle map
+         * @return - return the cell type of the place inside the map
+        */
         if (x < 0 || y < 0 || x >= map_size_x || y >= map_size_y) return true;
         int b = (int)*(background.data + background.step[0] * y + x * background.step[1]);
         int g = (int)*(background.data + background.step[0] * y + x * background.step[1] + background.elemSize1());
@@ -61,6 +71,11 @@ class GlobalObstacleMap {
     }
 
     bool checkPath(cv::Point p1, cv::Point p2) {
+        /**
+         * @breif - Collision check function along a path
+         * @param p1, p2 - two points defining the checking path
+         * @return - return if collapsed
+        */
         float step_x = p1.x - p2.x, step_y = p1.y - p2.y;
         float step_length = sqrt(pow(step_x, 2) + pow(step_y, 2));
         step_x /= step_length;
@@ -78,10 +93,19 @@ class GlobalObstacleMap {
     }
 
     float heuristic(int x, int y) {
+        /**
+         * @brief - Heuristic function using in A*
+         * @param x, y - exact place in the map
+         * @return - heuristic value of the place, i.e. distance to goal
+        */
         return sqrt(pow(x - goal_x, 2) + pow(y - goal_y, 2));
     }
 
     void render(int s=0) {
+        /**
+         * @brief - Rendering the visualization of the planner and map
+         * @param s - waitKey parameter, second
+        */
         cv::imshow(w_name, background);
         cv::waitKey(s);
     }
