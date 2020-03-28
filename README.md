@@ -7,6 +7,8 @@
 - A* Planning\
   Simple A* planning with global obstacle map.
   ![](./results/astar.png)
+  Compare to Djikstra:
+  ![](./results/djikstra.png)
 
 - PRM\
   Simple PRM planning with global obstacle map.
