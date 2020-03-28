@@ -8,13 +8,13 @@
 
 - Search-based: A* Planning\
   Simple A* planning with global obstacle map, compared to djikstra.
-  <img src="./results/planning/astar.png" alt="drawing" style="width:100px;"/><img src="./results/planning/djikstra.png" alt="drawing" style="width:100px;"/> 
+  <img src="./results/planning/astar.png" alt="drawing" style="width:50px;"/><img src="./results/planning/djikstra.png" alt="drawing" style="width:50px;"/> 
 
 - Sample-based: PRM & RRT\
   Simple PRM & RRT(RRT*) planning with global obstacle map.
-  <img src="./results/planning/prm.png" alt="drawing" style="width:100px;"/><img src="./results/planning/rrt.png" alt="drawing" style="width:100px;"/> \
+  <img src="./results/planning/prm.png" alt="drawing" style="width:50px;"/><img src="./results/planning/rrt.png" alt="drawing"  style="width:50px;"/> \
   RRT* can get the result optimized, but they both perform bad in maps having narrow channels.\
-  <img src="./results/planning/rrt_star.png" alt="drawing" style="width:100px;"/><img src="./results/planning/rrt2.png" alt="drawing" style="width:100px;"/>
+  <img src="./results/planning/rrt_star.png" alt="drawing" style="width:50px;"/><img src="./results/planning/rrt2.png" alt="drawing" style="width:50px;"/>
 
 ### Note: maps are from an open source github  [repo](https://github.com/XM522706601/robotics_tutorial_for_zhihu)
 
