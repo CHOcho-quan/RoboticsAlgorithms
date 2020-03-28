@@ -33,7 +33,7 @@ class GlobalObstacleMap {
     int map_size_y;
     string w_name;
 
-    GlobalObstacleMap(int s_x, int s_y, int g_x, int g_y, string map_path="../maps/map_1.png", string window_name="RRT") {
+    GlobalObstacleMap(int s_x, int s_y, int g_x, int g_y, string map_path="../maps/map_3.png", string window_name="RRT") {
         /**
          * @brief - Initialization of the Global Obstacle Map class
          * @param m_x, m_y - map size; s_x, s_y - start place; g_x, g_y - goal place

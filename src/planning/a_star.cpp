@@ -226,10 +226,12 @@ int main()
         o_x.push_back(50 - i);
         o_y.push_back(35);
     }
-    GlobalObstacleMap m(50, 50, 5, 5, 45, 45, o_x, o_y, "Djikstra");
-    // AstarPlanner planner;
-    // planner.AstarPlanning(m);
-    DjikstraPlanner planner;
-    planner.DjikstraPlanning(m);
+    GlobalObstacleMap m(50, 50, 5, 5, 45, 45, o_x, o_y, "A*");
+    AstarPlanner planner;
+    planner.AstarPlanning(m);
+    // DjikstraPlanner planner;
+    // planner.DjikstraPlanning(m);
     m.render(0);
+    cv::resize(m.background, m.background, cv::Size(200, 200));
+    cv::imwrite("../results/planning/astar.png", m.background);
 }

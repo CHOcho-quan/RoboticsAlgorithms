@@ -134,4 +134,6 @@ int main()
     RRTPlanner rrt = RRTPlanner();
     srand(int(time(NULL)));
     rrt.RRTPlanning(om);
+    cv::resize(om.background, om.background, cv::Size(200, 200));
+    cv::imwrite("../results/planning/rrt.png", om.background);
 }
