@@ -3,11 +3,12 @@ project(CppRobotics_quan)
 find_package(Eigen3 REQUIRED)
 find_package(OpenCV REQUIRED)
 
-message(STATUS ${EIGEN3_INCLUDE_DIR})
+message(STATUS ${PROJECT_SOURCE_DIR})
 
-include_directories(${EIGEN3_INCLUDE_DIR})
-include_directories(./include/planning)
-include_directories(./include/3rdParty)
+set(include_dir ${PROJECT_SOURCE_DIR}/include/planning
+    ${PROJECT_SOURCE_DIR}/include/3rdParty
+    ${EIGEN3_INCLUDE_DIR})
+include_directories(${include_dir})
 
 add_executable(astar src/planning/a_star.cpp)
 target_link_libraries(astar ${OpenCV_LIBS} )
@@ -23,5 +24,5 @@ target_link_libraries(prm ${OpenCV_LIBS} )
 
 file(GLOB ALGLIB_SOURCES include/3rdParty/ALGLIB/*.cpp )
 file(GLOB ALGLIB_HEADERS include/3rdParty/ALGLIB/*.h )
-add_executable(m_snap src/papers/minimum_snap_control.cpp ${ALGLIB_HEADERS} ${ALGLIB_SOURCES})
+add_executable(m_snap src/optimization/minimum_snap_control.cpp ${ALGLIB_HEADERS} ${ALGLIB_SOURCES})
 target_link_libraries(m_snap ${OpenCV_LIBS})
