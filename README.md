@@ -2,8 +2,6 @@
 
 ### My Personal Space to practice Robotics Algorithms on planning, mapping, filtering & optimization.
 
-### Will be updating all the time !
-
 ## Planning
 
 - Search-based: A* Planning\
