@@ -36,10 +36,19 @@ class PRMPlanner {
     }
 
     float distance(cv::Point p1, cv::Point p2) {
+        /**
+         * @brief - calculating the distance between point1 and point2
+         * @param p1, p2 - the two points to be calculated distance
+         * @return - returning the distance of the two points
+        */
         return sqrt(pow(p1.x - p2.x, 2) + pow(p1.y - p2.y, 2));
     }
 
     void PRMPlanning(GlobalObstacleMap m) {
+        /**
+         * @brief - PRM planning algorithm
+         * @param m - obstacle map
+        */
         srand(time(NULL));
         vector<vector<int>> AdjacentMatrix(rand_num, vector<int>(rand_num, 0));
         vector<cv::Point> points;
@@ -123,6 +132,10 @@ class PRMPlanner {
 
     void calcPath(Node *goal, GlobalObstacleMap m)
     {
+        /**
+         * @brief - calculate the final path finded by RRT*
+         * @param goal - goal place; m - obstacle map
+        */
         while (goal != NULL)
         {
             Node *tmp = goal->pre;

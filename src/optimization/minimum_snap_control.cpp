@@ -17,6 +17,10 @@ using namespace alglib;
 #define DEBUG 1
 
 class MinSnapOptimizer {
+    /**
+     * Robotics Trajectory Optimization - Minimum Snap
+     * @MinSnapOptimizeMultiple - optimize the path from start to end by Minimum Snap
+    */
  public:
     int degree; // Degree of the fitting polynomial
     double timeT; // Required time of the whole trajectory
@@ -49,11 +53,19 @@ class MinSnapOptimizer {
     }
 
     void render(int s) {
+        /**
+         * @brief - Rendering the visualization of the planner and map
+         * @param s - waitKey parameter, second
+        */
         cv::imshow(window_name, background);
         cv::waitKey(s);
     }
 
     bool MinSnapOptimizeMultiple(int part) {
+        /**
+         * @brief - Optimize composited trajectory planned by discrete method
+         * @param part - number of the different trajectory 
+        */
         if (part <= 0) {
             std::cout << "What are you doing?"  << std::endl;
             return false;
@@ -128,6 +140,11 @@ class MinSnapOptimizer {
 
     void MinSnapOptimizeSingle(double last_time_spec, double time_spec, double unit, std::vector<std::vector<double>> constraintx,
         std::vector<std::vector<double>> constrainty, std::vector<int> Px, std::vector<int> Py, real_1d_array &x, real_1d_array &y) {
+        /**
+         * @brief - Optimize single trajectory planned by discrete method
+         * @param constraintx, constrainty - extra constraint on connecting points
+         * @param time_spec, unit - time stamp of the trajectory and unit time stamp
+        */
         real_2d_array qua_term, cx, cy;
         real_1d_array linear_term, p0, scale;
         integer_1d_array ct;
@@ -225,6 +242,9 @@ class MinSnapOptimizer {
 
     void MinSnapQPOptimize(real_2d_array qua_term, real_1d_array linear_term, real_1d_array p0,
         real_1d_array scale, const real_2d_array c, const integer_1d_array ct, const ae_int_t k, real_1d_array &x) {
+        /**
+         * @brief - QP Optimizer given by ALGLIB
+        */
          // QP
         minqpstate state;
         minqpreport rep;
@@ -243,6 +263,9 @@ class MinSnapOptimizer {
     }
 
     void MinSnapOptimizeTest() {
+        /**
+         * @brief - A test version of trajectory generation by minimum snap
+        */
         cv::Mat bbk = cv::Mat(500, 500, CV_8UC3, cv::Scalar(255, 255, 255));
         std::vector<int> xx = {58, 47, 210, 477}, yy = {69, 249, 405, 109};
 
