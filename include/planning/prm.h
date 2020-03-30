@@ -2,6 +2,8 @@
 // Created by quan
 // 2020.3.20
 //
+#ifndef INCLUDE_PRM
+#define INCLUDE_PRM
 #include <iostream>
 #include <vector>
 #include <string>
@@ -110,3 +112,5 @@ class GlobalObstacleMap {
         cv::waitKey(s);
     }
 };
+
+#endif

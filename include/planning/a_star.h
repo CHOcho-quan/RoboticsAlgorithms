@@ -2,6 +2,9 @@
 // Created by quan
 // 2020.3.15
 //
+
+#ifndef INCLUDE_ASTAR
+#define INCLUDE_ASTAR
 #include <iostream>
 #include <vector>
 #include <string>
@@ -127,3 +130,5 @@ class GlobalObstacleMap {
         return sqrt(pow(goal_x - x, 2) + pow(goal_y - y, 2));
     }
 };
+
+#endif

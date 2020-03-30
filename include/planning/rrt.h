@@ -2,6 +2,8 @@
 // Created by quan
 // 2020.3.18
 //
+#ifndef INCLUDE_RRT
+#define INCLUDE_RRT
 #include <iostream>
 #include <vector>
 #include <string>
@@ -111,3 +113,5 @@ class GlobalObstacleMap {
         cv::waitKey(s);
     }
 };
+
+#endif
