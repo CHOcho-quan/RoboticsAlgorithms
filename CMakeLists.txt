@@ -6,6 +6,7 @@ find_package(OpenCV REQUIRED)
 message(STATUS ${PROJECT_SOURCE_DIR})
 
 set(include_dir ${PROJECT_SOURCE_DIR}/include/planning
+    ${PROJECT_SOURCE_DIR}/include/optimization
     ${PROJECT_SOURCE_DIR}/include/3rdParty
     ${EIGEN3_INCLUDE_DIR})
 include_directories(${include_dir})
