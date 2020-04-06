@@ -7,6 +7,7 @@ message(STATUS ${PROJECT_SOURCE_DIR})
 
 set(include_dir ${PROJECT_SOURCE_DIR}/include/planning
     ${PROJECT_SOURCE_DIR}/include/optimization
+    ${PROJECT_SOURCE_DIR}/include/filtering
     ${PROJECT_SOURCE_DIR}/include/3rdParty
     ${EIGEN3_INCLUDE_DIR})
 include_directories(${include_dir})
@@ -22,6 +23,9 @@ target_link_libraries(rrt_star ${OpenCV_LIBS} )
 
 add_executable(prm src/planning/prm.cpp)
 target_link_libraries(prm ${OpenCV_LIBS} )
+
+add_executable(kf src/filtering/kalman_filter.cpp)
+target_link_libraries(kf ${OpenCV_LIBS} )
 
 file(GLOB ALGLIB_SOURCES include/3rdParty/ALGLIB/*.cpp )
 file(GLOB ALGLIB_HEADERS include/3rdParty/ALGLIB/*.h )
