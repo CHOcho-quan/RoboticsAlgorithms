@@ -40,15 +40,15 @@ class KalmanFilter {
 int main()
 {
     double dT = 0.1, T = 50;
-    LinearDynamicSystem lds(1.0, 1.0); // Worse Observation
+    LinearDynamicSystem lds(10.0, 10.0);
     lds.A << 1.0, 0.0, dT, 0.0, 
             0.0, 1.0, 0.0, dT,
             0.0, 0.0, 1.0, 0.0,
             0.0, 0.0, 0.0, 1.0;
-    lds.B << pow(dT, 2) / 2, 0.0, 0.0, 0.0,
-            0.0, pow(dT, 2) / 2, 0.0, 0.0,
-            0.0, 0.0, dT, 0.0,
-            0.0, 0.0, 0.0, dT;
+    lds.B << pow(dT, 2) / 20, 0.0, 0.0, 0.0,
+            0.0, pow(dT, 2) / 20, 0.0, 0.0,
+            0.0, 0.0, dT / 10, 0.0,
+            0.0, 0.0, 0.0, dT / 10;
 
     lds.C << 1.0, 0.0, 0.0, 0.0,
             0.0, 1.0, 0.0, 0.0;
@@ -67,31 +67,49 @@ int main()
     // Randomized tools
     std::random_device rd{};
     std::mt19937 gen{rd()};
+    std::uniform_real_distribution<> n; // Normal Distribution
 
     cv::namedWindow("Kalman Filter");
-    cv::Mat background = cv::Mat(2000, 2000, CV_8UC3, cv::Scalar(255, 255, 255));
+    cv::Mat background = cv::Mat(200, 200, CV_8UC3, cv::Scalar(255, 255, 255));
+    std::vector<cv::Point> observations, reckoned, position, filtering;
     
     for (double t = 0.0;t < T;t += dT) {
-        pos = lds.getNextState(pos, u, gen);
+        Eigen::Vector2d errorObs;
+        Eigen::Vector4d errorState;
+        errorObs(0) = n(gen);
+        errorObs(1) = n(gen);
+        errorState(0) = n(gen);
+        errorState(1) = n(gen);
+        errorState(2) = n(gen);
+        errorState(3) = n(gen);
+
+        pos = lds.getNextState(pos, u, errorState);
         reckon = lds.getReckonedNextState(reckon, u);
-        Eigen::Vector2d obs = lds.getObservation(pos, gen);
+        Eigen::Vector2d obs = lds.getObservation(pos, errorObs);
 
         kf.predict(u);
         kf.update(obs);
 
-        // if (DEBUG) std::cout << "KF: " << kf.filtered(0) << ' ' << kf.filtered(1) << std::endl;
-        // if (DEBUG) std::cout << "POS: " << pos(0) << ' ' << pos(1) << std::endl;
-        // if (DEBUG) std::cout << "OBS: " << obs(0) << ' ' << obs(1) << std::endl;
+        if (DEBUG) std::cout << "KF: " << kf.filtered(0) << ' ' << kf.filtered(1) << std::endl;
+        if (DEBUG) std::cout << "POS: " << pos(0) << ' ' << pos(1) << std::endl;
+        if (DEBUG) std::cout << "OBS: " << obs(0) << ' ' << obs(1) << std::endl;
 
         // Visualizing
-        cv::circle(background, cv::Point(int(reckon(0)), int(reckon(1))), 5, cv::Scalar(0, 0, 0), -1);
-        cv::circle(background, cv::Point(int(pos(0)), int(pos(1))), 5, cv::Scalar(0, 255, 0), -1);
-        cv::circle(background, cv::Point(int(kf.filtered(0)), int(kf.filtered(1))), 5, cv::Scalar(255, 0, 0), -1);
-        cv::circle(background, cv::Point(int(obs(0)), int(obs(1))), 1, cv::Scalar(0, 0, 255), -1);
+        observations.push_back(cv::Point(cvRound(obs(0)), cvRound(obs(1))));
+        reckoned.push_back(cv::Point(cvRound(reckon(0)), cvRound(reckon(1))));
+        position.push_back(cv::Point(cvRound(pos(0)), cvRound(pos(1))));
+        filtering.push_back(cv::Point(cvRound(kf.filtered(0)), cvRound(kf.filtered(1))));
     }
+
+    cv::polylines(background, reckoned, false, cv::Scalar(0, 0, 0), 5);
+    cv::polylines(background, position, false, cv::Scalar(255, 0, 0), 10);
+    cv::polylines(background, filtering, false, cv::Scalar(0, 255, 0), 5);
+
+    for (int i = 0;i < observations.size();i++) cv::circle(background, observations[i], 3, cv::Scalar(0, 0, 255), -1);
+
     cv::imshow("Kalman Filter", background);
     cv::waitKey(0);
 
-    // cv::resize(background, background, cv::Size(300, 300));
+    cv::resize(background, background, cv::Size(300, 300));
     cv::imwrite("../results/filtering/kf.png", background);
 }

@@ -26,8 +26,6 @@ public:
     Eigen::Matrix2d R; // Error Covarience Matrix
     Eigen::Matrix4d Q;
 
-    std::uniform_real_distribution<> n; // Normal Distribution
-
     LinearDynamicSystem() {}
     LinearDynamicSystem &operator=(LinearDynamicSystem &lds) {
         A = lds.A;
@@ -46,7 +44,6 @@ public:
     }
 
     LinearDynamicSystem(double cov1, double cov2) {
-        n = std::uniform_real_distribution<>(0, 1);
         C = Eigen::MatrixXd(2, 4);
         Q(0, 0) = cov1;
         Q(1, 1) = cov1;
@@ -56,21 +53,14 @@ public:
         R(1, 1) = cov2;
     }
 
-    Eigen::Vector2d getObservation(Eigen::Vector4d input, std::mt19937 gen) {
-        Eigen::Vector2d result = C * input;
-        std::cout << n(gen) << std::endl;
-        result(0) += n(gen) * R(0, 0);
-        result(1) += n(gen) * R(1, 1);
+    Eigen::Vector2d getObservation(Eigen::Vector4d input, Eigen::Vector2d error) {
+        Eigen::Vector2d result = C * input + R * error;
 
         return result;
     }
 
-    Eigen::Vector4d getNextState(Eigen::Vector4d last_state, Eigen::Vector4d control_input, std::mt19937 gen) {
-        Eigen::Vector4d state = A * last_state + B * control_input;
-        state(0) += n(gen) * Q(0, 0);
-        state(1) += n(gen) * Q(1, 1);
-        state(2) += n(gen) * Q(2, 2);
-        state(3) += n(gen) * Q(3, 3);
+    Eigen::Vector4d getNextState(Eigen::Vector4d last_state, Eigen::Vector4d control_input, Eigen::Vector4d error) {
+        Eigen::Vector4d state = A * last_state + B * control_input + Q * error;
 
         return state;
     }
