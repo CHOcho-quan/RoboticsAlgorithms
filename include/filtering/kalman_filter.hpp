@@ -15,16 +15,16 @@ class LinearDynamicSystem
 public:
     /**
      * Formulation of a linear dynamic system model, simple 2D version
-     * Xt = A * Xt-1 + B + e1
-     * Zt = C * Xt + D + e2
+     * Xt = A * Xt-1 + B * u + e1
+     * Zt = C * Xt + e2
      * where e1 ~ N(0, sigma1) and e2 ~ N(0, sigma2)
     */
-    Eigen::Matrix2d A; // State Transfer Matrix
-    Eigen::Vector2d B;
-    Eigen::Matrix2d C; // Observation Matrix
-    Eigen::Vector2d D;
+    Eigen::Matrix4d A; // State Transfer Matrix
+    Eigen::Matrix4d B;
+    Eigen::MatrixXd C; // Observation Matrix
     const int state_size = 2, obs_size = 2;
-    Eigen::Matrix2d Q, R; // Error Covarience Matrix
+    Eigen::Matrix2d R; // Error Covarience Matrix
+    Eigen::Matrix4d Q;
 
     std::uniform_real_distribution<> n; // Normal Distribution
 
@@ -33,7 +33,6 @@ public:
         A = lds.A;
         B = lds.B;
         C = lds.C;
-        D = lds.D;
         Q = lds.Q;
         R = lds.R;
     }
@@ -42,34 +41,41 @@ public:
         A = lds.A;
         B = lds.B;
         C = lds.C;
-        D = lds.D;
         Q = lds.Q;
         R = lds.R;
     }
 
     LinearDynamicSystem(double cov1, double cov2) {
         n = std::uniform_real_distribution<>(0, 1);
+        C = Eigen::MatrixXd(2, 4);
         Q(0, 0) = cov1;
         Q(1, 1) = cov1;
+        Q(2, 2) = cov1;
+        Q(3, 3) = cov1;
         R(0, 0) = cov2;
         R(1, 1) = cov2;
     }
 
-    Eigen::Vector2d getObservation(Eigen::Vector2d input, std::mt19937 gen) {
-        Eigen::Vector2d result = C * input + D;
-        result(0) += n(gen) * Q(0, 0);
-        result(1) += n(gen) * Q(1, 1);
+    Eigen::Vector2d getObservation(Eigen::Vector4d input, std::mt19937 gen) {
+        Eigen::Vector2d result = C * input;
+        std::cout << n(gen) << std::endl;
+        result(0) += n(gen) * R(0, 0);
+        result(1) += n(gen) * R(1, 1);
 
         return result;
     }
 
-    Eigen::Vector2d getNextState(Eigen::Vector2d last_state, std::mt19937 gen) {
-        Eigen::Vector2d state = A * last_state + B;
-        state(0) += n(gen) * R(0, 0);
-        state(1) += n(gen) * R(1, 1);
+    Eigen::Vector4d getNextState(Eigen::Vector4d last_state, Eigen::Vector4d control_input, std::mt19937 gen) {
+        Eigen::Vector4d state = A * last_state + B * control_input;
+        state(0) += n(gen) * Q(0, 0);
+        state(1) += n(gen) * Q(1, 1);
+        state(2) += n(gen) * Q(2, 2);
+        state(3) += n(gen) * Q(3, 3);
 
         return state;
     }
 
-    Eigen::Vector2d getReckonedNextState(Eigen::Vector2d last_state) { return A * last_state + B; }
+    Eigen::Vector4d getReckonedNextState(Eigen::Vector4d last_state, Eigen::Vector4d control_input) {
+         return A * last_state + B * control_input; 
+    }
 };
