@@ -57,7 +57,7 @@ public:
     Eigen::Vector2d getObservation(Eigen::Vector4d input, Eigen::Vector2d error) {
         /**
          * @brief get current observation given input
-         * @param input - current control input
+         * @param input - current state input
          * @param error - the error caused by uncertainty - Gaussian
          * @return observation vector
         */

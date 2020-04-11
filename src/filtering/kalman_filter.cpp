@@ -51,13 +51,13 @@ class KalmanFilter {
 int main()
 {
     double dT = 0.1, T = 50;
-    LinearDynamicSystem lds(10.0, 10.0);
+    LinearDynamicSystem lds(0.1, 0.1);
     lds.A << 1.0, 0.0, dT, 0.0, 
             0.0, 1.0, 0.0, dT,
             0.0, 0.0, 1.0, 0.0,
             0.0, 0.0, 0.0, 1.0;
-    lds.B << pow(dT, 2) / 20, 0.0, 0.0, 0.0,
-            0.0, pow(dT, 2) / 20, 0.0, 0.0,
+    lds.B << 0.0, 0.0, 0.0, 0.0,
+            0.0, 0.0, 0.0, 0.0,
             0.0, 0.0, dT / 10, 0.0,
             0.0, 0.0, 0.0, dT / 10;
 
@@ -78,7 +78,7 @@ int main()
     // Randomized tools
     std::random_device rd{};
     std::mt19937 gen{rd()};
-    std::uniform_real_distribution<> n; // Normal Distribution
+    std::normal_distribution<> n(0, 1); // Normal Distribution
 
     cv::namedWindow("Kalman Filter");
     cv::Mat background = cv::Mat(200, 200, CV_8UC3, cv::Scalar(255, 255, 255));

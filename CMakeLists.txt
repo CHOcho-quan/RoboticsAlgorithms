@@ -27,6 +27,9 @@ target_link_libraries(prm ${OpenCV_LIBS} )
 add_executable(kf src/filtering/kalman_filter.cpp)
 target_link_libraries(kf ${OpenCV_LIBS} )
 
+add_executable(ekf src/filtering/ekf.cpp)
+target_link_libraries(ekf ${OpenCV_LIBS} )
+
 file(GLOB ALGLIB_SOURCES include/3rdParty/ALGLIB/*.cpp )
 file(GLOB ALGLIB_HEADERS include/3rdParty/ALGLIB/*.h )
 add_executable(m_snap src/optimization/minimum_snap_control.cpp ${ALGLIB_HEADERS} ${ALGLIB_SOURCES})
