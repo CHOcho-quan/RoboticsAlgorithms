@@ -19,6 +19,10 @@ class KalmanFilter {
     LinearDynamicSystem lds;
 
     KalmanFilter(LinearDynamicSystem s) {
+        /**
+         * @brief Initialization of kalman filter
+         * @param s - the given dynamic system
+        */
         lds = s;
         // Initial Eye matrix for covariences
         covarience = Eigen::Matrix4d::Identity();
@@ -26,10 +30,17 @@ class KalmanFilter {
         kalman_gain = Eigen::MatrixXd(4, 2);
     }
     void predict(Eigen::Vector4d control_input) {
+        /**
+         * @brief prediction phase of kalman filter
+        */
         prediction = lds.A * filtered + lds.B * control_input;
         covarience = lds.A * last_covarience * lds.A.transpose() + lds.Q;
     }
     void update(Eigen::Vector2d obs) {
+        /**
+         * @brief update phase of kalman filter
+         * @param obs - given observation of current state
+        */
         kalman_gain = covarience * lds.C.transpose() * 
             (lds.C * covarience * lds.C.transpose() + lds.R).inverse();
         filtered = prediction + kalman_gain * (obs - lds.C * prediction);

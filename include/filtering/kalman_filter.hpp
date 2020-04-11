@@ -17,6 +17,7 @@ public:
      * Formulation of a linear dynamic system model, simple 2D version
      * Xt = A * Xt-1 + B * u + e1
      * Zt = C * Xt + e2
+     * Xt = [x, y, Vx, Vy], u = [ax, ay]
      * where e1 ~ N(0, sigma1) and e2 ~ N(0, sigma2)
     */
     Eigen::Matrix4d A; // State Transfer Matrix
@@ -54,18 +55,33 @@ public:
     }
 
     Eigen::Vector2d getObservation(Eigen::Vector4d input, Eigen::Vector2d error) {
+        /**
+         * @brief get current observation given input
+         * @param input - current control input
+         * @param error - the error caused by uncertainty - Gaussian
+         * @return observation vector
+        */
         Eigen::Vector2d result = C * input + R * error;
 
         return result;
     }
 
     Eigen::Vector4d getNextState(Eigen::Vector4d last_state, Eigen::Vector4d control_input, Eigen::Vector4d error) {
+        /**
+         * @brief get next state given current state and control input
+         * @param last_state - current state
+         * @return next state vector
+        */
         Eigen::Vector4d state = A * last_state + B * control_input + Q * error;
 
         return state;
     }
 
     Eigen::Vector4d getReckonedNextState(Eigen::Vector4d last_state, Eigen::Vector4d control_input) {
+        /**
+         * @brief getting Dead Reckoned state to compare with
+         * @return reckoned state vector
+        */
          return A * last_state + B * control_input; 
     }
 };
