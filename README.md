@@ -16,6 +16,11 @@
 
 ### Note: maps are from an open source github  [repo](https://github.com/XM522706601/robotics_tutorial_for_zhihu)
 
+## Filtering
+
+- Kalman Filter\
+  Kalman filter simulation with simple motion model. Extended Kalman Filter is also implemented with same motion model adding nonlinearity by angle velocity.
+
 ## Optimization
 
 - Minimum Snap Trajectory Optimization for quadrotor\
