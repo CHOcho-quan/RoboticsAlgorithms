@@ -24,7 +24,8 @@ enum CELLTYPE{
     START,
     GOAL,
     OBSTACLE,
-    PATH
+    PATH,
+    REPLAN
 };
 
 struct Node {
@@ -83,6 +84,15 @@ class GlobalObstacleMap {
         for (int i = 0;i < o_x.size();i++) annoteCell(o_x[i], o_y[i], OBSTACLE);
     }
 
+    void setObstacle(vector<int> o_x, vector<int> o_y) {
+        /**
+         * @brief - Set new Obstacles in map
+        */
+        for (int i = 0;i < o_x.size();i++) annoteCell(o_x[i], o_y[i], OBSTACLE); 
+        for (auto x : o_x) obstacle_x.push_back(x);
+        for (auto y : o_y) obstacle_y.push_back(y);
+    }
+
     void render(int s) {
         /**
          * @brief - Rendering the visualization of the planner and map
@@ -132,6 +142,11 @@ class GlobalObstacleMap {
             }
             case PATH: {
                 cv::rectangle(background, cv::Rect(c_x, c_y, 1, 1), cv::Scalar(128, 0, 128), -1);
+                break;
+            }
+            case REPLAN: {
+                cv::rectangle(background, cv::Rect(c_x, c_y, 1, 1), cv::Scalar(128, 128, 0), -1);
+                break;
             }
         }
     }
