@@ -16,6 +16,8 @@
 
 using namespace std;
 
+#define DEBUG 0
+
 enum CELLTYPE{
     FREE=1,
     ROBOT,
@@ -23,6 +25,19 @@ enum CELLTYPE{
     GOAL,
     OBSTACLE,
     PATH
+};
+
+struct Node {
+    /**
+     * Node for A* planning
+     * @x, y - the coordinate of current point
+     * @cost - the f cost of the point computed by A*
+    */
+    int x;
+    int y;
+    float cost;
+    Node *pre;
+    Node(int x_c, int y_c, float c, Node *p=NULL) : x(x_c), y(y_c), cost(c), pre(p) {}
 };
 
 class GlobalObstacleMap {
@@ -84,6 +99,7 @@ class GlobalObstacleMap {
          * @param x, y - the checking place in the obstacle map
          * @return - return the cell type of the place inside the map
         */
+        if (x < 0 || y < 0 || x >= map_size_x || y >= map_size_y) return OBSTACLE;
         if (x == start_x && y == start_y) return START;
         if (x == goal_x && y == goal_y) return GOAL;
         for (int i = 0;i < obstacle_x.size();i++) if (obstacle_x[i] == x && obstacle_y[i] == y) return OBSTACLE;

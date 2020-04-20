@@ -4,21 +4,6 @@
 //
 #include "a_star.h"
 
-#define DEBUG 0
-
-struct Node {
-    /**
-     * Node for A* planning
-     * @x, y - the coordinate of current point
-     * @cost - the f cost of the point computed by A*
-    */
-    int x;
-    int y;
-    float cost;
-    Node *pre;
-    Node(int x_c, int y_c, float c, Node *p=NULL) : x(x_c), y(y_c), cost(c), pre(p) {}
-};
-
 class DjikstraPlanner {
     /**
      * Robotics Djikstra Planner

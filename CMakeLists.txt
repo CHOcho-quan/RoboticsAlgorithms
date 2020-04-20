@@ -15,6 +15,9 @@ include_directories(${include_dir})
 add_executable(astar src/planning/a_star.cpp)
 target_link_libraries(astar ${OpenCV_LIBS} )
 
+add_executable(dstar src/planning/d_star.cpp)
+target_link_libraries(dstar ${OpenCV_LIBS} )
+
 add_executable(rrt src/planning/rrt.cpp)
 target_link_libraries(rrt ${OpenCV_LIBS} )
 
