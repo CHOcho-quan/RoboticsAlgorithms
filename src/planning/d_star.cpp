@@ -277,12 +277,17 @@ int main()
     planner.LPAstarPlanning(m);
     std::cout << planner.pq.size();
     m.render(0);
-    // cv::resize(m.background, m.background, cv::Size(200, 200));
-    // cv::imwrite("../results/planning/lpastar.png", m.background);
+
+    cv::Mat ori, final;
+    cv::resize(m.background, ori, cv::Size(200, 200));
+    cv::imwrite("../results/planning/lpastar1.png", ori);
 
     vector<int> c_x = {26, 27, 28, 29}, c_y = {15, 15, 15, 15};
     m.setObstacle(c_x, c_y);
     m.render(0);
     planner.LPAstarReplanning(m, c_x, c_y);
     m.render(0);
+
+    cv::resize(m.background, final, cv::Size(200, 200));
+    cv::imwrite("../results/planning/lpastar2.png", final);
 }

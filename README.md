@@ -8,6 +8,9 @@
   Simple A* planning with global obstacle map, compared to djikstra.\
   !["A*"](./results/planning/astar.png) !["Djikstra"](./results/planning/djikstra.png)\
 
+  LP-A* planning to do replan after slight map change. First pic is LP-A* planning for the first time. Second pic is replanned path after map changing. TO DO: D* Lite for dynamic env.\
+  !["LPA*-1"](./results/planning/lpastar1.png)!["LPA*-2"](./results/planning/lpastar2.png)
+
 - Sample-based: PRM & RRT\
   Simple PRM & RRT(RRT*) planning with global obstacle map.\
   !["PRM"](./results/planning/prm.png) !["RRT"](./results/planning/rrt.png)\
