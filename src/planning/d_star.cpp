@@ -245,6 +245,10 @@ class LPAstarPlanner {
     }
 };
 
+class DstarLitePlanner {
+
+};
+
 int main()
 {
     vector<int> o_x, o_y;
