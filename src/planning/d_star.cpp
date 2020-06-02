@@ -18,11 +18,47 @@ struct LPNode {
     LPNode(int x_c, int y_c, float c1, float c2, LPNode *p=NULL) : x(x_c), y(y_c), k1(c1), k2(c2), pre(p) {}
 };
 
+struct DstarNode {
+    /**
+     * Node for D*-Lite planning
+     * @x, y - the coordinate of current point
+     * @cost - the f cost of the point computed by A*
+    */
+   int x;
+   int y;
+   DstarNode *pre;
+};
+
+class DstarLitePlanner {
+    /**
+     * Robotics D*-Lite Planner
+     * @calcPath - calculating the final path and draw it on Obstacle map
+     * @DstarLitePlanning - plan the path on the given obstacle map
+    */
+ public:
+    static bool cmp(const DstarNode *a, const DstarNode *b)
+    {
+
+    }
+    vector<vector<float>> g;
+    vector<vector<float>> rhs;
+    vector<DstarNode*> pq;
+    vector<Node> motions = { Node(1, 0, 1.0), Node(0, 1, 1.0), Node(0, -1, 1.0), Node(-1, 0, 1.0), 
+                            Node(1, 1, sqrt(2)), Node(1, -1, sqrt(2)), Node(-1, -1, sqrt(2)), Node(-1, 1, sqrt(2))};
+    map<pair<int, int>, pair<int, int>> path;
+
+    void calcPath(DstarNode* end, GlobalObstacleMap om, CELLTYPE celltype = PATH)
+    {
+
+    }
+};
+
 class LPAstarPlanner {
     /**
      * Robotics LP-A* Planner
      * @calcPath - calculating the final path and draw it on Obstacle map
-     * @AstarPlanning - plan the path on the given obstacle map
+     * @LPAstarPlanning - plan the path on the given obstacle map
+     * @LPAstarReplanning - replan when the map info changed
     */
  public:
     static bool cmp(const LPNode *a, const LPNode *b)
@@ -243,10 +279,6 @@ class LPAstarPlanner {
 
         calcPath(final, m);
     }
-};
-
-class DstarLitePlanner {
-
 };
 
 int main()
