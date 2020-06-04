@@ -18,17 +18,6 @@ struct LPNode {
     LPNode(int x_c, int y_c, float c1, float c2, LPNode *p=NULL) : x(x_c), y(y_c), k1(c1), k2(c2), pre(p) {}
 };
 
-struct DstarNode {
-    /**
-     * Node for D*-Lite planning
-     * @x, y - the coordinate of current point
-     * @cost - the f cost of the point computed by A*
-    */
-   int x;
-   int y;
-   DstarNode *pre;
-};
-
 class DstarLitePlanner {
     /**
      * Robotics D*-Lite Planner
@@ -36,20 +25,195 @@ class DstarLitePlanner {
      * @DstarLitePlanning - plan the path on the given obstacle map
     */
  public:
-    static bool cmp(const DstarNode *a, const DstarNode *b)
+    static bool cmp(const LPNode *a, const LPNode *b)
     {
-
+        if (a->k1 == b->k1) return a->k2 < b->k2;
+        return a->k1 < b->k1; 
     }
+    int current_x;
+    int current_y;
     vector<vector<float>> g;
     vector<vector<float>> rhs;
-    vector<DstarNode*> pq;
+    vector<LPNode*> pq;
     vector<Node> motions = { Node(1, 0, 1.0), Node(0, 1, 1.0), Node(0, -1, 1.0), Node(-1, 0, 1.0), 
                             Node(1, 1, sqrt(2)), Node(1, -1, sqrt(2)), Node(-1, -1, sqrt(2)), Node(-1, 1, sqrt(2))};
-    map<pair<int, int>, pair<int, int>> path;
 
-    void calcPath(DstarNode* end, GlobalObstacleMap om, CELLTYPE celltype = PATH)
-    {
+    // K1 comparison
+    float k1(LocalObstacleMap m, int x, int y) { 
+        if (min(g[x][y], rhs[x][y]) == 2147483647) return 2147483647;
+        return min(g[x][y], rhs[x][y]) + m.heuristicStart(x, y); 
+    }
 
+    // K2 comparison
+    float k2(int x, int y) { return min(g[x][y], rhs[x][y]); }
+
+    void pushNode(LPNode *n) {
+        /**
+         * @brief - push a node into current open list
+         * @param n - node to be pushed
+        */
+        pq.push_back(n);
+        sort(pq.begin(), pq.end(), cmp);
+    }
+
+    void removeNode(LPNode *n) {
+        /**
+         * @brief - remove a node in current open list
+         * @param n - node to be removed
+        */
+        for (auto iter = pq.begin();iter != pq.end();iter++) {
+            LPNode *tmp = *iter;
+            if (tmp->x == n->x && tmp->y == n->y) {
+                pq.erase(iter);
+                break;
+            }
+        }
+    }
+
+    void updateVertex(LocalObstacleMap m, LPNode *n) {
+        /**
+         * @brief - update vertex node inside open list
+         * @param n - node to be updated
+        */
+        if (m.goal_x == n->x && m.goal_y == n->y) return ;//n;
+
+        // Calculate RHS value
+        float mini = 2147483647;
+        int xx, yy;
+        for (auto motion : motions) {
+            int nx = n->x + motion.x, ny = n->y + motion.y;
+            if (m.checkCell(nx, ny) == OBSTACLE) continue;
+            if (g[nx][ny] != 2147483647) {
+                float costs = g[nx][ny] + motion.cost;
+                if (costs < mini) {
+                    mini = costs;
+                    xx = nx;
+                    yy = ny;
+                }
+            }
+        }
+        rhs[n->x][n->y] = mini;
+
+        removeNode(n);
+        n->k1 = k1(m, n->x, n->y);
+        n->k2 = k2(n->x, n->y);
+
+        if (g[n->x][n->y] != rhs[n->x][n->y]) pushNode(n);
+    }
+
+    void computeShortestPath(LocalObstacleMap m) {
+        LPNode *final = NULL;
+        while (pq.size() > 0 && (rhs[m.start_x][m.start_y] == 2147483647 || 
+            k2(m.start_x, m.start_y) > k2(pq[0]->x, pq[0]->y) || rhs[m.start_x][m.start_y] != g[m.start_x][m.start_y])) {
+            LPNode *cur = pq[0];
+            pq.erase(pq.begin());
+
+            int cx = cur->x, cy = cur->y;
+            if (g[cx][cy] > rhs[cx][cy]) {
+                g[cx][cy] = rhs[cx][cy];
+                for (auto motion : motions) {
+                    int nx = cx + motion.x, ny = cy + motion.y;
+                    if (m.checkCell(nx, ny) == OBSTACLE) continue;
+                    LPNode* next = new LPNode(nx, ny, k1(m, nx, ny), k2(nx, ny), cur);
+                    updateVertex(m, next);
+                    if (nx == m.start_x && ny == m.start_y) final = next;
+                }
+            }
+            else {
+                cout << "BAD" << endl;
+                g[cx][cy] = 2147483647;
+                updateVertex(m, cur);
+                for (auto motion : motions) {
+                    int nx = cx + motion.x, ny = cy + motion.y;
+                    if (m.checkCell(nx, ny) == OBSTACLE) continue;
+                    LPNode* next = new LPNode(nx, ny, k1(m, nx, ny), k2(nx, ny), cur);
+                    updateVertex(m, next);
+                }
+            }
+
+            if (final != NULL) break;
+        }
+    }
+
+    void DstarLitePlanning(LocalObstacleMap m) {
+        // Initialization
+        current_x = m.start_x;
+        current_y = m.start_y;
+        for (int i = 0;i < m.map_size_x;i++) {
+            vector<float> tmpg;
+            vector<float> tmpr;
+            for (int j = 0;j < m.map_size_y;j++) {
+                tmpg.push_back(2147483647);
+                tmpr.push_back(2147483647);
+            }
+
+            g.push_back(tmpg);
+            rhs.push_back(tmpr);
+        }
+
+        rhs[m.goal_x][m.goal_y] = 0;
+        LPNode *final = NULL, *goal = new LPNode(m.goal_x, m.goal_y, 
+            k1(m, m.goal_x, m.goal_y), k2(m.goal_x, m.goal_y));
+        pushNode(goal);
+
+        computeShortestPath(m);
+
+        while (current_x != m.goal_x || current_y != m.goal_y) {
+            float mini = 2147483647;
+            int xx = -1, yy = -1;
+            for (auto motion : motions) {
+                int nx = current_x + motion.x, ny = current_y + motion.y;
+                LPNode* next = new LPNode(nx, ny, k1(m, nx, ny), k2(nx, ny));
+                if (m.checkCell(nx, ny) == OBSTACLE) continue;
+                cout << nx << ' ' << ny << " and cost: " << g[nx][ny] << endl;
+                if (g[nx][ny] != 2147483647) {
+                    float costs = g[nx][ny] + motion.cost;
+                    if (costs < mini) {
+                        mini = costs;
+                        xx = nx;
+                        yy = ny;
+                    }
+                }
+            }
+
+            if (xx == -1 || yy == -1) {
+                cout << "Internal Error" << endl;
+                break;                
+            }
+            current_x = xx;
+            m.start_x = xx;
+            current_y = yy;
+            m.start_y = yy;
+            cout << current_x << ' ' << current_y << endl;
+
+            m.annoteCell(current_x, current_y, REPLAN);
+            m.explore(current_x, current_y);
+            
+            bool flag = false;
+            for (auto x : m.new_obs_x) {
+                for (auto y : m.new_obs_y) {
+                    cout << "New obstacle: " << x << ' ' << y << endl;
+                    g[x][y] = rhs[x][y] = 2147483647;
+                    flag = true;
+                    LPNode* next = new LPNode(x, y, k1(m, x, y), k2(x, y));
+                    updateVertex(m, next);
+                    for (auto motion : motions) {
+                        int nx = next->x + motion.x, ny = next->y + motion.y;
+                        cout << "Updated: " << nx << ' ' << ny << " and cost: " << g[nx][ny] << endl;
+                    }
+                }
+            }
+
+            for (auto node_s : pq) {
+                LPNode* tmp = node_s;
+                tmp->k1 = k1(m, tmp->x, tmp->y);
+                tmp->k2 = k2(tmp->x, tmp->y);
+                removeNode(node_s);
+                pushNode(tmp);
+            }
+
+            if (true) computeShortestPath(m);
+        }
     }
 };
 
@@ -300,30 +464,39 @@ int main()
         o_x.push_back(49);
         o_y.push_back(i);
     }
-    for (int i = 0;i < 26;i++) {
+    for (int i = 0;i < 23;i++) {
         o_x.push_back(i);
         o_y.push_back(15);
     }
-    for (int i = 0;i < 26;i++) {
+    for (int i = 0;i < 20;i++) {
         o_x.push_back(50 - i);
         o_y.push_back(35);
     }
-    GlobalObstacleMap m(50, 50, 5, 5, 45, 45, o_x, o_y, "LPA*");
-    LPAstarPlanner planner;
-    planner.LPAstarPlanning(m);
-    std::cout << planner.pq.size();
+    LocalObstacleMap m(50, 50, 5, 5, 30, 45, o_x, o_y, "D*-Lite");
+    DstarLitePlanner planner;
+    planner.DstarLitePlanning(m);
     m.render(0);
+    cv::resize(m.background, m.background, cv::Size(200, 200));
+    cv::imwrite("../results/planning/dstar.png", m.background);
 
-    cv::Mat ori, final;
-    cv::resize(m.background, ori, cv::Size(200, 200));
-    cv::imwrite("../results/planning/lpastar1.png", ori);
+    // GlobalObstacleMap m(50, 50, 5, 5, 45, 45, o_x, o_y, "LPA*");
+    // LPAstarPlanner planner;
+    // planner.LPAstarPlanning(m);
+    // std::cout << planner.pq.size();
+    // m.render(0);
 
-    vector<int> c_x = {26, 27, 28, 29}, c_y = {15, 15, 15, 15};
-    m.setObstacle(c_x, c_y);
-    m.render(0);
-    planner.LPAstarReplanning(m, c_x, c_y);
-    m.render(0);
+    // cv::Mat ori, final;
+    // cv::resize(m.background, ori, cv::Size(200, 200));
+    // cv::imwrite("../results/planning/lpastar1.png", ori);
 
-    cv::resize(m.background, final, cv::Size(200, 200));
-    cv::imwrite("../results/planning/lpastar2.png", final);
+    // vector<int> c_x = {26, 27, 28, 29}, c_y = {15, 15, 15, 15};
+    // m.setObstacle(c_x, c_y);
+    // m.render(0);
+    // planner.LPAstarReplanning(m, c_x, c_y);
+    // m.render(0);
+
+    // cv::resize(m.background, final, cv::Size(200, 200));
+    // cv::imwrite("../results/planning/lpastar2.png", final);
+
+    return 0;
 }

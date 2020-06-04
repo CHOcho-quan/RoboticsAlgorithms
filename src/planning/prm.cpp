@@ -150,6 +150,6 @@ int main()
     GlobalObstacleMap om(10, 10, 450, 450);
     PRMPlanner prm;
     prm.PRMPlanning(om);
-    cv::resize(om.background, om.background, cv::Size(200, 200));
+    // cv::resize(om.background, om.background, cv::Size(200, 200));
     cv::imwrite("../results/planning/prm.png", om.background);
 }

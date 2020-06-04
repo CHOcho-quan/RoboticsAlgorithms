@@ -199,6 +199,6 @@ int main()
     RRTStarPlanner rrt_star = RRTStarPlanner();
     srand(int(time(NULL)));
     rrt_star.RRTStarPlanning(om);
-    cv::resize(om.background, om.background, cv::Size(200, 200));
+    // cv::resize(om.background, om.background, cv::Size(200, 200));
     cv::imwrite("../results/planning/rrt_star.png", om.background);
 }

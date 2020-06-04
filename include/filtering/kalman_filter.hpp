@@ -2,6 +2,8 @@
 // Created by quan
 // 2020.4.6
 //
+#ifndef INCLUDE_KALMAN_FILTER
+#define INCLUDE_KALMAN_FILTER
 #include <iostream>
 #include <random>
 #include <opencv2/opencv.hpp>
@@ -85,3 +87,5 @@ public:
          return A * last_state + B * control_input; 
     }
 };
+
+#endif

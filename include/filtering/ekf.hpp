@@ -2,6 +2,8 @@
 // Created by quan
 // 2020.4.11
 //
+#ifndef INCLUDE_EXTENDED_KALMAN_FILTER
+#define INCLUDE_EXTENDED_KALMAN_FILTER
 #include <iostream>
 #include <math.h>
 #include <random>
@@ -126,3 +128,5 @@ class NonlinearDynamicSystem {
          return A * last_state + B * control_input; 
     }
 };
+
+#endif
