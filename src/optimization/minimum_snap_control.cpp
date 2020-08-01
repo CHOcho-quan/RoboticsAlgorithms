@@ -7,10 +7,10 @@
 
 int main()
 {
-    std::vector<int> x = {54, 250, 588, 210, 754, 477, 909, 910}, y = {78, 78, 176, 555, 435, 200, 177, 178};
+    std::vector<int> x = {54, 157, 266, 280, 400, 450, 408, 307}, y = {78, 88, 100, 230, 435, 505, 600, 701};
     MinSnapOptimizer m(6, x, y);
     // m.MinSnapOptimizeTest();
     m.MinSnapOptimizeMultiple(2);
-    cv::resize(m.background, m.background, cv::Size(300, 300));
+    // cv::resize(m.background, m.background, cv::Size(300, 300));
     cv::imwrite("../results/optimization/minimum_snap4.png", m.background);
 }

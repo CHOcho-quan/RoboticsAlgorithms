@@ -8,8 +8,8 @@
   Simple A* planning with global obstacle map, compared to djikstra.\
   !["A*"](./results/planning/astar.png) !["Djikstra"](./results/planning/djikstra.png)
 
-  LP-A* planning to do replan after slight map change. First pic is LP-A* planning for the first time. Second pic is replanned path after map changing. TO DO: D* Lite for dynamic env.\
-  !["LPA*-1"](./results/planning/lpastar1.png)!["LPA*-2"](./results/planning/lpastar2.png)
+  LP-A* planning to do replan after slight map change. First pic is LP-A* planning for the first time. Second pic is replanned path after map changing. Third pic is D* with local map only.\
+  !["LPA*-1"](./results/planning/lpastar1.png)!["LPA*-2"](./results/planning/lpastar2.png)!["D*-Lite"](./results/planning/dstar.png)
 
 - Sample-based: PRM & RRT\
   Simple PRM & RRT(RRT*) planning with global obstacle map.\
@@ -27,7 +27,7 @@
 ## Optimization
 
 - Minimum Snap Trajectory Optimization for quadrotor\
-  The algorithm was implemented only the version of equalized time split and without corridor but it's relatively easy to change. Simply changing equality constraint to inequality can get it to the corridor version. In corridor version, it's OK for us to do collision detection and enable the robot to move. Time split can be calculated by acceleration and velocity. Also the trajectory was not the best. To be convenient for the simulation, we only consider 1st derivative continous on the connecting point.\
+  The algorithm was implemented only the version of equalized time split. Simply changing equality constraint to inequality can get it to the corridor version. In corridor version, it's OK for us to do collision detection and enable the robot to move. Time split can be calculated by acceleration and velocity. Also the trajectory was not the best. To be convenient for the simulation, we only consider 1st derivative continous on the connecting point.\
   !["Minimum_snap"](./results/optimization/minimum_snapQP.png)!["ContinuousOpitimization"](results/optimization/minimum_snap2.png)
   >Reference: [1] Mellinger D, Kumar V. Minimum snap trajectory generation and control for quadrotors, Robotics and Automation (ICRA), 2011\
   >[2] Chen J, Liu T, Shen S. Online generation of collision-free trajectories for quadrotor flight in unknown cluttered environments, Robotics and Automation (ICRA), 2016

@@ -2,7 +2,8 @@
 // Created by quan
 // 2020.4.3
 //
-
+#ifndef INCLUDE_MINIMUM_SNAP
+#define INCLUDE_MINIMUM_SNAP
 #include <iostream>
 #include <stdio.h>
 #include <vector>
@@ -339,3 +340,5 @@ class MinSnapOptimizer {
         cv::imwrite("../results/optimization/minimum_snapQP.png", bbk);
     }
 };
+
+#endif
