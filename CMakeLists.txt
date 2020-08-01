@@ -3,7 +3,9 @@ project(CppRobotics_quan)
 find_package(Eigen3 REQUIRED)
 find_package(OpenCV REQUIRED)
 
-message(STATUS ${PROJECT_SOURCE_DIR})
+message(STATUS ${OpenCV_LIBS})
+
+add_definitions(-std=c++11)
 
 set(include_dir ${PROJECT_SOURCE_DIR}/include/planning
     ${PROJECT_SOURCE_DIR}/include/optimization
