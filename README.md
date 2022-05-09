@@ -4,7 +4,7 @@
 
 ## Planning
 
-- Search-based: A* Planning\
+- Search-based: A*, LP-A* and D* Algorithm Planning\
   Simple A* planning with global obstacle map, compared to djikstra.\
   !["A*"](./results/planning/astar.png) !["Djikstra"](./results/planning/djikstra.png)
 
